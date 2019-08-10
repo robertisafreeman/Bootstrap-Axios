@@ -1,0 +1,120 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+        <style rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'></style>
+
+    </head>
+    <body>
+        <div class='container'>
+            <h1>Acme w/ Bootstrap and Axios VJS</h1>
+            <ul class='nav nav-tabs'>
+                <li id='companyList' class='nav-item'>
+                    <a class='nav-link' id='companiesLink' href='#companies'>
+                        Companies 
+                        </a>
+                </li>
+                <li id ='productList' class='nav-item'>
+                    <a class='nav-link' href='#products' id='productsLink'>
+                        Products
+                    </a>
+                </li>
+            </ul>
+            <h2 id='title'></h2>
+            <div id='results'>
+
+            </div>
+        </div>
+        <script>
+            const productLink = document.querySelector('#productLink');
+            const companyLink = document.querySelector('#companyLink');
+            const results = document.querySelector('#results')
+
+
+            const loadDataCompanies = async() => {
+                const response = await axios.get("https://acme-users-api-rev.herokuapp.com/api/companies");
+                const companies = response.data;
+                render(companies);
+            }
+            const loadDataProducts = async() => {
+                const response = await axios.get("https://acme-users-api-rev.herokuapp.com/api/products");
+                const products = response.data;
+                render(products);
+            }
+            // const loadData = () => {
+            //     Promise.all([fetch(products_URL), fetch(companies_URL)])
+            //         .then( responses => Promise.all(responses.map(responses => responses.json())))
+            //         .then(([products, companies]) => {
+            //             console.log(Object.keys(products[0]))
+            //         render(products, companies)
+            //     })
+            
+            // }
+
+
+            const render = (items) => {
+
+                const generateRow = (item)=> {
+                    const arr = [];
+                    for (let key in item) {
+                        arr.push(`<td>${item[key]}</td>`)
+                    }
+                    return arr.join('');
+                }
+
+                const keys = Object.keys(items[0])
+                const html = `
+                <table class='table'>
+                    <thead>
+                    ${
+                    keys.map( key => `<th>${key}</th>`).join('')
+                    }
+                    <thead>
+                    <tbody>
+                    ${
+                    items.map( item => `<tr>${ generateRow(item)}</tr>`).join('')
+                    }
+                    </tbody>
+                </table>
+                `;
+                console.log(html);
+                // this is where we add our generated html string to the DOM
+                results.innerHTML = html;
+            }
+
+            window.addEventListener('hashchange', (ev) => {
+                console.log("hello")
+            })
+            
+            
+                
+                // const generateRow = () => products.forEach()
+                // const generateTitle = () => productHeader.map( header => `<th>${header}</th>`).join('');
+                // const html = `
+                // <table class="table">
+                //     <thead>
+                //     ${
+                //         generateTitle()
+                //     }
+                //     </thead>
+                //     <tbody>
+                //     ${
+                //         products.map( product => `<tr>${ product.id }</tr>`).join('')
+                //     }
+                //     </tbody>
+                //     </table>`
+
+
+            loadDataProducts();
+            loadDataCompanies();
+
+           
+
+
+
+            
+
+            
+
+        </script>
+    </body>
+</html>
